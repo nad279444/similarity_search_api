@@ -1,0 +1,7 @@
+langchain
+langchain-ollama
+python-decouple
+langserve[all]
+langchain-community
+upstash-vector
+jupyter

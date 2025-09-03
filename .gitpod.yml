@@ -1,0 +1,15 @@
+tasks:
+  - name: Setup Ollama
+    init: |
+      curl -fsSL https://ollama.com/install.sh | sh
+      mkdir -p /workspace/.ollama
+      export OLLAMA_MODELS=/workspace/.ollama
+      ollama pull llama3
+    command: |
+      export OLLAMA_MODELS=/workspace/.ollama
+      ollama serve > /tmp/ollama.log 2>&1 &
+
+ports:
+  - port: 11434
+    onOpen: ignore
+    visibility: public
