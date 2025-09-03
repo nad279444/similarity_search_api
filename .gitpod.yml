@@ -1,6 +1,6 @@
 tasks:
   - name: Setup Ollama
-    before: |
+    init: |
       # Create a local bin folder for Ollama
       mkdir -p $HOME/bin
       curl -L https://ollama.com/download/ollama-linux-amd64 -o $HOME/bin/ollama
@@ -8,14 +8,19 @@ tasks:
 
       # Persist models in the workspace
       mkdir -p /workspace/.ollama
+      export OLLAMA_MODELS=/workspace/.ollama
 
-      # Add Ollama to PATH and set OLLAMA_MODELS for all future shells
-      gp env PATH="$HOME/bin:$PATH"
-      gp env OLLAMA_MODELS="/workspace/.ollama"
-    init: |
+      # Add Ollama to PATH for all future shells
+      echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
+      echo 'export OLLAMA_MODELS=/workspace/.ollama' >> ~/.bashrc
+      source ~/.bashrc
+
       # Pull the llama3 model
-      ollama pull llama3
+      $HOME/bin/ollama pull llama3
+
     command: |
+      export PATH=$HOME/bin:$PATH
+      export OLLAMA_MODELS=/workspace/.ollama
       ollama serve > /tmp/ollama.log 2>&1 &
 
 ports:
