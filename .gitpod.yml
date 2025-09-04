@@ -8,20 +8,34 @@ tasks:
 
       # Persist models in the workspace
       mkdir -p /workspace/.ollama
-      export OLLAMA_MODELS=/workspace/.ollama
 
       # Add Ollama to PATH for all future shells
       echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
       echo 'export OLLAMA_MODELS=/workspace/.ollama' >> ~/.bashrc
-      source ~/.bashrc
-
-      # Pull the llama3 model
-      $HOME/bin/ollama pull llama3
 
     command: |
+      # Set environment variables
       export PATH=$HOME/bin:$PATH
       export OLLAMA_MODELS=/workspace/.ollama
+      
+      # Start Ollama service in background
       ollama serve > /tmp/ollama.log 2>&1 &
+      
+      # Wait for Ollama to be ready
+      echo "Waiting for Ollama to start..."
+      sleep 5
+      
+      # Check if Ollama is running and pull model
+      if pgrep -f "ollama serve" > /dev/null; then
+        echo "Ollama is running, pulling llama3 model..."
+        ollama pull llama3
+        echo "Ollama setup complete!"
+      else
+        echo "Failed to start Ollama service"
+      fi
+      
+      # Keep the terminal open
+      bash
 
 ports:
   - port: 11434
