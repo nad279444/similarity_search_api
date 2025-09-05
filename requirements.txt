@@ -5,3 +5,6 @@ langserve[all]
 langchain-community
 upstash-vector
 jupyter
+fastapi
+uvicorn
+redis
